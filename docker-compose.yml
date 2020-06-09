@@ -2,7 +2,7 @@ version: '3'
 services:  
   web:
     build: .
-    command: bundle exec rails s -e production
+    command: bundle exec puma -C config/puma.rb
     volumes:
       - .:/app
   nginx:
