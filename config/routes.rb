@@ -3,4 +3,5 @@ Rails.application.routes.draw do
   get "/" => "home#top"
   get "/secret" => "secret#login"
   get "/calc" => "calc#calculation"
+  get "/stocker" => "stock#manage"
 end
