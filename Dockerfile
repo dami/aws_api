@@ -1,18 +1,11 @@
-FROM ruby:2.6.5-alpine
-
-ENV LANG="C.UTF-8" \
-    PACKAGES="curl-dev build-base alpine-sdk tzdata sqlite-dev less ruby-dev nodejs"
-
-RUN apk update && \
-    apk add --no-cache --update $PACKAGES
-
-WORKDIR /var/www
-
-COPY ./ ./
-
-RUN gem install bundler && \
-    bundle install -j4
-
-EXPOSE 3000
-
-CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+FROM ruby:2.6.5
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update -qq && apt-get install -y build-essential nodejs yarn sqlite-dev
+RUN mkdir /app
+WORKDIR /app
+COPY Gemfile /app/Gemfile
+COPY Gemfile.lock /app/Gemfile.lock
+RUN gem install bundler
+RUN bundle install
+COPY . /app

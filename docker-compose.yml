@@ -1,13 +1,16 @@
 version: '3'
-services:
-  app:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+services:  
+  web:
+    build: .
+    command: bundle exec rails s -e production
     volumes:
-      - ./:/var/www
+      - .:/app
+  nginx:
+    build: containers/nginx
     ports:
-      - "3000:3000"
-    tty: true
-    stdin_open: true
-    restart: always
+      - "80:80"
+    volumes:
+      - ./public:/app/public
+      - ./tmp:/app/tmp
+    depends_on:
+      - web
